@@ -1,7 +1,7 @@
 Aurelia bundle task
 =======
 
-Copy the bundle.js file into `build/task`
+Copy the bundle.js file into `build/tasks`
 
 It will add the `bundle` and `bundle-app` task
 
