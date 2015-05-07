@@ -52,7 +52,7 @@ gulp.task('bundle-app', function (done) {
     fs.unlinkSync('dist/'+distFile);
   }
 
-  var cmd =  "**/* - aurelia - core-js";
+  var cmd =  "**/* - aurelia";
   jspm.bundle(cmd,distFile,
     {inject:true,minify:true}
   ).then(function(){
