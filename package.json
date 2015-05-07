@@ -1,0 +1,11 @@
+{
+  "name": "aurelia-gulp-bundle",
+  "version": "0.0.1",
+  "main": "bundle.js",
+  "dependencies": {
+    "filesize": "^3.1.2",
+    "gulp": "^3.8.11",
+    "gzip-size": "^1.0.0",
+    "jspm": "^0.15.6"
+  }
+}
