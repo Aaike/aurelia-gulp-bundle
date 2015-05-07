@@ -17,3 +17,6 @@ NOTE: this task requires you to change the default path in the config.js to :
 ```
 "*": "dist/*.js",
 ```
+
+
+The task does not include the `'aurelia-animator-css' , if you want it to be included add it to the array in the `bundle` gulp task.
