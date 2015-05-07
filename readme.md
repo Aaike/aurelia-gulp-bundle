@@ -11,3 +11,9 @@ The `bundle-app` task will create the app-bundle.js which contains all your app 
 
 
 There is also an `unbundle task` that will remove the bundles and make jspm use separate files again.
+
+NOTE: this task requires you to change the default path in the config.js to :
+
+```
+"*": "dist/*.js",
+```
