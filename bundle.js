@@ -66,9 +66,7 @@ gulp.task('bundle-app', function (done) {
  * unbundle the aurelia-framework and use separate files again
  */
 gulp.task('unbundle', function (done) {
-  exec('jspm unbundle', function() {
-    done();
-  });
+  exec('jspm unbundle',done);
 });
 
 function showStats(distFile) {
