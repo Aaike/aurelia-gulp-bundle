@@ -1,8 +1,8 @@
 var gulp = require('gulp');
 var jspm = require('jspm');
 var fs = require('fs');
-var exec = require('child_process').exec;
-
+var paths = require('../paths');
+var shell = require('child-process-promise');
 var filesize = require('filesize');
 var gzipSize = require('gzip-size');
 
@@ -12,53 +12,57 @@ var gzipSize = require('gzip-size');
 gulp.task('bundle', function (done) {
 
   var distFile = 'aurelia.js';
+  var outputFile = paths.output+ distFile;
 
-  jspm.bundle(
-    [
-      'aurelia-bootstrapper',
-      'aurelia-http-client',
-      'aurelia-dependency-injection',
-      'aurelia-framework',
-      'aurelia-router',
+  var cmd = [
+    'aurelia-bootstrapper',
+    'aurelia-http-client',
+    'aurelia-dependency-injection',
+    'aurelia-framework',
+    'aurelia-router',
+    'npm:core-js',
 
-      'github:aurelia/metadata@0.5.0',
-      'github:aurelia/task-queue@0.4.0',
-      'github:aurelia/event-aggregator@0.4.0',
-      'github:aurelia/templating@0.11.0',
-      'github:aurelia/history@0.4.0',
-      'github:aurelia/history-browser@0.4.0',
-      'github:aurelia/templating-router@0.12.0',
-      'github:aurelia/templating-resources@0.11.0',
-      'github:aurelia/templating-binding@0.11.0',
-      'github:aurelia/binding@0.6.0',
-      'github:aurelia/loader-default@0.7.0',
-      'github:aurelia/logging-console@0.4.0'
+    'github:aurelia/metadata@0.5.0',
+    'github:aurelia/task-queue@0.4.0',
+    'github:aurelia/event-aggregator@0.4.0',
+    'github:aurelia/templating@0.11.2',
+    'github:aurelia/history@0.4.0',
+    'github:aurelia/history-browser@0.4.0',
+    'github:aurelia/event-aggregator@0.4.0',
+    'github:aurelia/templating-router@0.12.0',
+    'github:aurelia/templating-resources@0.11.1',
+    'github:aurelia/templating-binding@0.11.0',
+    'github:aurelia/binding@0.6.1',
+    'github:aurelia/loader-default@0.7.0'
 
-    ].join(' + '),
-    distFile,
-    {inject:true,minify:true}
-  ).then(function(){
-      showStats(distFile);
-      fs.rename(distFile, 'dist/aurelia.js', done);
+  ].join(' + ');
+  
+  jspm.bundle(cmd,distFile,{inject:true,minify:true}).then(function(){
+    fs.rename(distFile, outputFile, function(){
+      showStats(outputFile);
+      done();
+    });
   });
 
 });
 
+/**
+ * Bundle application and vendor files.
+ */
 gulp.task('bundle-app', function (done) {
 
   var distFile = 'app-bundle.js';
+  var outputFile = paths.output+distFile;
 
-  if(fs.existsSync('dist/'+distFile)){
-    fs.unlinkSync('dist/'+distFile);
-  }
+  if(fs.existsSync(outputFile)) fs.unlinkSync(outputFile);
 
   var cmd =  "**/* - aurelia";
-  jspm.bundle(cmd,distFile,
-    {inject:true,minify:true}
-  ).then(function(){
-      showStats(distFile);
-      fs.rename(distFile, 'dist/app-bundle.js', done);
+  jspm.bundle(cmd,distFile,{inject:true,minify:true}).then(function(){
+    fs.rename(distFile, outputFile, function(){
+      showStats(outputFile);
+      done();
     });
+  });
 
 });
 
@@ -66,7 +70,7 @@ gulp.task('bundle-app', function (done) {
  * unbundle the aurelia-framework and use separate files again
  */
 gulp.task('unbundle', function (done) {
-  exec('jspm unbundle',done);
+  return shell.exec('jspm unbundle');
 });
 
 function showStats(distFile) {
